@@ -5,6 +5,7 @@ import { Lock } from "@/components/screens/Lock"
 import { Week } from "@/components/screens/Week"
 import { SCREEN_IDS } from "@/content/screen-ids"
 import type { Copy, ScreenId } from "@/content/types"
+import { DESKTOP_QUERY } from "@/lib/media"
 import { cn } from "@/lib/utils"
 
 function Screen({ id, copy }: { id: ScreenId; copy: Copy }) {
@@ -36,16 +37,14 @@ const ZOOM: Record<ScreenId, Zoom | null> = {
   week: { part: "week", scale: 1.3 },
 }
 
-function zoomTransform(
-  stage: HTMLElement,
-  active: ScreenId,
-  keepLeftEdge: boolean,
-  fitWidth = Infinity
-): string {
+const MOBILE_FOCUS_Y = 0.275
+const MOBILE_FIT_WIDTH = 0.92
+
+function zoomTransform(stage: HTMLElement, active: ScreenId, desktop: boolean): string {
   const zoom = ZOOM[active]
   if (!zoom) return ""
   const part = stage.querySelector<HTMLElement>(
-    `:is([data-screen="${active}"], [data-shot-screen="${active}"]) [data-part="${zoom.part}"]`
+    `[data-screen="${active}"] [data-part="${zoom.part}"]`
   )
   if (!part) return ""
   const outer = stage.getBoundingClientRect()
@@ -53,11 +52,23 @@ function zoomTransform(
   const inner = part.getBoundingClientRect()
   const x = (inner.left + inner.width / 2 - outer.left) / outer.width
   const y = (inner.top + inner.height / 2 - outer.top) / outer.height
-  const partWidth = (inner.width * stage.offsetWidth) / outer.width
-  const scale = Math.min(zoom.scale, fitWidth / partWidth)
-  const dx = keepLeftEdge ? ((scale - 1) / 2) * 100 : (0.5 - x) * scale * 100
-  const dy = (0.5 - y) * scale * 100
-  return `translate(${dx}%, ${dy}%) scale(${scale})`
+  if (desktop) {
+    const dx = ((zoom.scale - 1) / 2) * 100
+    const dy = (0.5 - y) * zoom.scale * 100
+    return `translate(${dx}%, ${dy}%) scale(${zoom.scale})`
+  }
+  const width = stage.offsetWidth
+  const height = stage.offsetHeight
+  const partWidth = (inner.width * width) / outer.width
+  const scale = Math.min(zoom.scale, (window.innerWidth * MOBILE_FIT_WIDTH) / partWidth)
+  const frame = stage.parentElement?.getBoundingClientRect()
+  const pinned = stage.closest<HTMLElement>(".phone-stage")
+  if (!frame || !pinned) return ""
+  const left = frame.left
+  const top = parseFloat(getComputedStyle(pinned).top)
+  const dx = window.innerWidth / 2 - (left + width / 2) - scale * (x - 0.5) * width
+  const dy = window.innerHeight * MOBILE_FOCUS_Y - (top + height / 2) - scale * (y - 0.5) * height
+  return `translate(${dx}px, ${dy}px) scale(${scale})`
 }
 
 export function PhoneStage({ copy, active }: { copy: Copy; active: ScreenId }) {
@@ -65,8 +76,13 @@ export function PhoneStage({ copy, active }: { copy: Copy; active: ScreenId }) {
   useLayoutEffect(() => {
     const element = stage.current
     if (!element) return
-    const desktop = window.matchMedia("(min-width: 1024px)").matches
-    element.style.transform = zoomTransform(element, active, desktop)
+    const apply = () => {
+      const desktop = window.matchMedia(DESKTOP_QUERY).matches
+      element.style.transform = zoomTransform(element, active, desktop)
+    }
+    apply()
+    window.addEventListener("resize", apply)
+    return () => window.removeEventListener("resize", apply)
   }, [active])
   return (
     <div
@@ -91,44 +107,6 @@ export function PhoneStage({ copy, active }: { copy: Copy; active: ScreenId }) {
           </div>
         ))}
       </PhoneFrame>
-    </div>
-  )
-}
-
-const SHOT_WIDTH = "w-[min(300px,72vw)]"
-
-export function PhoneHero({ copy }: { copy: Copy }) {
-  return (
-    <div aria-hidden="true" className="mt-8 flex justify-center lg:hidden">
-      <PhoneFrame className={SHOT_WIDTH} label={copy.screens.descriptions.home}>
-        <Screen id="home" copy={copy} />
-      </PhoneFrame>
-    </div>
-  )
-}
-
-export function PhoneShot({ copy, id }: { copy: Copy; id: ScreenId }) {
-  const target = useRef<HTMLDivElement>(null)
-  useLayoutEffect(() => {
-    const element = target.current
-    if (!element) return
-    const frame = element.parentElement?.clientWidth ?? 0
-    element.style.transform = zoomTransform(element, id, false, frame * 0.92)
-  }, [id])
-  return (
-    <div
-      data-shot
-      aria-hidden="true"
-      className={cn(
-        "mt-4 flex aspect-[4/3] w-full justify-center overflow-clip rounded-[28px] border border-rule lg:hidden",
-        ZOOM[id] ? "items-center" : "items-start"
-      )}
-    >
-      <div ref={target} data-shot-screen={id} className="shrink-0">
-        <PhoneFrame className={SHOT_WIDTH} label={copy.screens.descriptions[id]}>
-          <Screen id={id} copy={copy} />
-        </PhoneFrame>
-      </div>
     </div>
   )
 }

@@ -148,13 +148,26 @@
   }
 }
 
+.phone-stage {
+  --phone-w: min(320px, 80vw);
+  position: sticky;
+  top: 4.5rem;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1023.98px) {
+  [data-tilt-desktop] {
+    transform: none !important;
+  }
+}
+
 @media (min-width: 1024px) {
   .phone-stage {
     --phone-w: min(300px, 38vh);
-    position: sticky;
     top: calc(50vh - var(--phone-w) * 864 / 820);
     z-index: 10;
-    justify-content: center;
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: start;

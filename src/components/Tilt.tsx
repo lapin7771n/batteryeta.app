@@ -8,6 +8,7 @@ type TiltProps = {
   from: [number, number]
   target?: RefObject<HTMLElement | null>
   offset?: ScrollOffset
+  desktopOnly?: boolean
   className?: string
   children: ReactNode
 }
@@ -16,7 +17,7 @@ function subscribeNothing(): () => void {
   return () => {}
 }
 
-export function Tilt({ axis, from, target, offset, className, children }: TiltProps) {
+export function Tilt({ axis, from, target, offset, desktopOnly, className, children }: TiltProps) {
   const ref = useRef<HTMLDivElement>(null)
   const mounted = useSyncExternalStore(
     subscribeNothing,
@@ -33,7 +34,9 @@ export function Tilt({ axis, from, target, offset, className, children }: TiltPr
 
   return (
     <div ref={ref} className={className} style={{ perspective: 1200 }}>
-      <motion.div style={style}>{children}</motion.div>
+      <motion.div style={style} data-tilt-desktop={desktopOnly ? "" : undefined}>
+        {children}
+      </motion.div>
     </div>
   )
 }
