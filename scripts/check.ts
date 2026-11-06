@@ -226,6 +226,12 @@ function checkContent(lang: Lang, html: string): void {
     const where = `step ${index + 1}`
     needIn(where, articleText, `${where} title`, step.title)
     needIn(where, articleText, `${where} body`, step.body)
+    const shots = tags(article, "div").filter(
+      (div) => div.has("data-shot") && div.get("aria-hidden") === "true"
+    )
+    if (shots.length !== 1) {
+      fail(lang, `${where} has ${shots.length} aria-hidden phone shots, expected 1`)
+    }
     if (step.regionsLead) {
       needIn(where, articleText, `${where} regions lead`, step.regionsLead)
       for (const region of REGIONS) {

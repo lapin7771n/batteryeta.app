@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from "react"
-import { PhoneStage } from "@/components/PhoneStage"
+import { PhoneHero, PhoneShot, PhoneStage } from "@/components/PhoneStage"
 import { Tilt } from "@/components/Tilt"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { regionsText } from "@/content/regions"
@@ -67,8 +67,9 @@ export function FeatureSteps({ copy }: { copy: Copy }) {
             height={48}
           />
         </a>
+        <PhoneHero copy={copy} />
       </div>
-      <div className="phone-stage">
+      <div className="phone-stage hidden lg:flex">
         <Tilt
           axis="rotateY"
           from={[-18, 0]}
@@ -83,7 +84,7 @@ export function FeatureSteps({ copy }: { copy: Copy }) {
           <article
             key={step.title}
             data-step={index + 1}
-            className="flex min-h-[55vh] items-start pt-4 pb-10 lg:min-h-[80vh] lg:items-center lg:py-0"
+            className="pt-4 pb-10 lg:flex lg:min-h-[80vh] lg:items-center lg:py-0"
           >
             <Card className="w-full [--card-spacing:--spacing(7)]">
               <CardHeader>
@@ -103,6 +104,7 @@ export function FeatureSteps({ copy }: { copy: Copy }) {
                 ) : null}
               </CardContent>
             </Card>
+            <PhoneShot copy={copy} id={step.screen} />
           </article>
         ))}
       </div>

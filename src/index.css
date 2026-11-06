@@ -148,31 +148,15 @@
   }
 }
 
-.phone-stage {
-  --phone-w: calc(46vh * 410 / 864);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  justify-content: center;
-  margin-inline: -1.25rem;
-  padding: 0.75rem 0;
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-  backdrop-filter: blur(12px);
-  overflow: clip;
-}
-
 @media (min-width: 1024px) {
   .phone-stage {
     --phone-w: min(300px, 38vh);
+    position: sticky;
     top: calc(50vh - var(--phone-w) * 864 / 820);
+    z-index: 10;
+    justify-content: center;
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: start;
-    margin: 0;
-    padding: 0;
-    background: none;
-    backdrop-filter: none;
-    overflow: visible;
   }
 }
