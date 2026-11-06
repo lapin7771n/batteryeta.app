@@ -145,12 +145,32 @@ function assetExists(asset: string): boolean {
   )
 }
 
+function sectionHtml(html: string, id: string): string | null {
+  const match = html.match(
+    new RegExp(`<section[^>]*id="${id}"[\\s\\S]*?</section>`)
+  )
+  return match ? match[0] : null
+}
+
 function checkContent(lang: Lang, html: string): void {
   const copy = COPY[lang]
   const text = visibleText(html)
-  const need = (label: string, expected: string) => {
-    if (!text.includes(normalize(expected))) {
-      fail(lang, `${label} missing from prerendered HTML: "${expected.slice(0, 60)}"`)
+  const needIn = (where: string, haystack: string, label: string, expected: string) => {
+    if (!haystack.includes(normalize(expected))) {
+      fail(lang, `${label} missing from ${where}: "${expected.slice(0, 60)}"`)
+    }
+  }
+  const need = (label: string, expected: string) =>
+    needIn("prerendered HTML", text, label, expected)
+  const needInSection = (id: string, label: string, expected: readonly string[]) => {
+    const section = sectionHtml(html, id)
+    if (section === null) {
+      fail(lang, `<section id="${id}"> missing from prerendered HTML`)
+      return
+    }
+    const sectionText = visibleText(section)
+    for (const value of expected) {
+      needIn(`<section id="${id}">`, sectionText, label, value)
     }
   }
 
@@ -158,13 +178,42 @@ function checkContent(lang: Lang, html: string): void {
   if (!h1 || visibleText(h1[0]).length === 0) {
     fail(lang, "<h1> missing from prerendered HTML")
   }
-  for (const region of REGIONS) need("region", region[lang])
-  need("supported device", SUPPORTED_DEVICE)
-  for (const device of SOON_DEVICES) need("soon device", device)
+  needInSection("useful", "region", REGIONS.map((region) => region[lang]))
+  needInSection("devices", "device", [SUPPORTED_DEVICE, ...SOON_DEVICES])
   copy.faq.items.forEach((item, index) => {
     need(`FAQ question ${index + 1}`, item.q)
     need(`FAQ answer ${index + 1}`, item.a)
   })
+}
+
+const PAGE_URL: Record<Lang, string> = {
+  uk: "https://batteryeta.app/",
+  en: "https://batteryeta.app/en/",
+}
+const EXPECTED_HREFLANG = [
+  `en ${PAGE_URL.en}`,
+  `uk ${PAGE_URL.uk}`,
+  `x-default ${PAGE_URL.en}`,
+].sort()
+
+function checkHead(lang: Lang, html: string): void {
+  const htmlLang = html.match(/<html\s[^>]*>/)
+  const declared = htmlLang ? attributes(htmlLang[0].slice(5, -1)).get("lang") : undefined
+  if (declared !== lang) fail(lang, `<html lang="${declared ?? ""}">, expected "${lang}"`)
+
+  const canonicals = tags(html, "link").filter((link) => link.get("rel") === "canonical")
+  const canonical = canonicals.map((link) => link.get("href") ?? "")
+  if (canonical.length !== 1 || canonical[0] !== PAGE_URL[lang]) {
+    fail(lang, `canonical [${canonical.join(", ")}], expected ${PAGE_URL[lang]}`)
+  }
+
+  const hreflang = hreflangSet(html)
+  if (hreflang.join("\n") !== EXPECTED_HREFLANG.join("\n")) {
+    fail(
+      lang,
+      `hreflang [${hreflang.join(", ")}], expected [${EXPECTED_HREFLANG.join(", ")}]`
+    )
+  }
 }
 
 const pages = new Map<Lang, string>()
@@ -179,21 +228,9 @@ for (const lang of LANGS) {
 
 for (const [lang, html] of pages) {
   checkJsonLd(lang, html)
+  checkHead(lang, html)
   checkStoreLinks(lang, html)
   checkContent(lang, html)
-}
-
-const [first, second] = LANGS.map((lang) => pages.get(lang))
-if (first !== undefined && second !== undefined) {
-  const left = hreflangSet(first)
-  const right = hreflangSet(second)
-  if (left.length === 0) fail("both", "no hreflang links")
-  if (left.join("\n") !== right.join("\n")) {
-    fail(
-      "both",
-      `hreflang sets differ: uk [${left.join(", ")}] vs en [${right.join(", ")}]`
-    )
-  }
 }
 
 const referenced = new Set<string>(cssAssets())
