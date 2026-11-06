@@ -10,7 +10,8 @@ import type { Copy, Lang } from "../src/content/types"
 const root = path.resolve(import.meta.dirname, "..")
 const dist = path.join(root, "dist")
 const publicDir = path.join(root, "public")
-const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+const CHROME =
+  process.env.CHROME || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 const WIDTH = 1200
 const HEIGHT = 630
 const LANGS: readonly Lang[] = ["uk", "en"]
