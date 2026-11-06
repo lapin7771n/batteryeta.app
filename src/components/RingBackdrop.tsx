@@ -45,12 +45,16 @@ function afterFirstPaint(task: () => void): () => void {
   return () => window.clearTimeout(id)
 }
 
-function RingLayer() {
+function ScrollCssRing() {
+  const { scrollYProgress } = useScroll()
+  const degrees = useTransform(scrollYProgress, (value) => clamp01(value) * SWEEP_DEG)
+  return <CssRing degrees={degrees} />
+}
+
+function RingLive({ onReady }: { onReady: () => void }) {
   const { scrollYProgress } = useScroll()
   const reduceMotion = useReducedMotion() ?? false
   const [webgl, setWebgl] = useState(false)
-  const [ready, setReady] = useState(false)
-  const degrees = useTransform(scrollYProgress, (value) => clamp01(value) * SWEEP_DEG)
 
   useEffect(() => {
     if (!hasWebGl()) return
@@ -58,19 +62,7 @@ function RingLayer() {
   }, [])
 
   return (
-    <div
-      aria-hidden="true"
-      className="ring-backdrop pointer-events-none fixed -z-10"
-    >
-      <div
-        className={cn(
-          "absolute inset-0 transition-opacity duration-500",
-          ready && "opacity-0"
-        )}
-      >
-        <CssRing degrees={degrees} />
-        <RingStill />
-      </div>
+    <>
       {webgl && (
         <RingBoundary>
           <Suspense fallback={null}>
@@ -79,13 +71,13 @@ function RingLayer() {
                 progress={scrollYProgress}
                 reduceMotion={reduceMotion}
                 maxDpr={1}
-                onReady={() => setReady(true)}
+                onReady={onReady}
               />
             </div>
           </Suspense>
         </RingBoundary>
       )}
-    </div>
+    </>
   )
 }
 
@@ -99,5 +91,22 @@ export function RingBackdrop() {
     () => true,
     () => false
   )
-  return mounted ? <RingLayer /> : null
+  const [ready, setReady] = useState(false)
+  return (
+    <div
+      aria-hidden="true"
+      className="ring-backdrop pointer-events-none fixed -z-10"
+    >
+      <div
+        className={cn(
+          "absolute inset-0 transition-opacity duration-500",
+          ready && "opacity-0"
+        )}
+      >
+        {mounted && <ScrollCssRing />}
+        <RingStill />
+      </div>
+      {mounted && <RingLive onReady={() => setReady(true)} />}
+    </div>
+  )
 }

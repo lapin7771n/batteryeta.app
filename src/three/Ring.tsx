@@ -55,9 +55,10 @@ type GaugeProps = {
   progress: MotionValue<number>
   reduceMotion: boolean
   onFirstFrame: () => void
+  sparkles: boolean
 }
 
-function Gauge({ progress, reduceMotion, onFirstFrame }: GaugeProps) {
+function Gauge({ progress, reduceMotion, onFirstFrame, sparkles }: GaugeProps) {
   const invalidate = useThree((state) => state.invalidate)
   const turn = useRef<Group>(null)
   const tip = useRef<Mesh>(null)
@@ -166,14 +167,16 @@ function Gauge({ progress, reduceMotion, onFirstFrame }: GaugeProps) {
           <meshBasicMaterial color={TIP_COLOR} toneMapped={false} />
         </mesh>
       </group>
-      <Sparkles
-        count={28}
-        scale={[5, 4, 2]}
-        size={3}
-        speed={0.3}
-        opacity={0.6}
-        color="#B3D9FF"
-      />
+      {sparkles && (
+        <Sparkles
+          count={28}
+          scale={[5, 4, 2]}
+          size={3}
+          speed={0.3}
+          opacity={0.6}
+          color="#B3D9FF"
+        />
+      )}
     </group>
   )
 }
@@ -183,6 +186,7 @@ type RingSceneProps = {
   reduceMotion: boolean
   maxDpr: number
   onReady: () => void
+  sparkles?: boolean
 }
 
 export default function RingScene({
@@ -190,6 +194,7 @@ export default function RingScene({
   reduceMotion,
   maxDpr,
   onReady,
+  sparkles = true,
 }: RingSceneProps) {
   return (
     <Canvas
@@ -237,6 +242,7 @@ export default function RingScene({
         progress={progress}
         reduceMotion={reduceMotion}
         onFirstFrame={onReady}
+        sparkles={sparkles}
       />
       <EffectComposer multisampling={4}>
         <Bloom
