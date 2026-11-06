@@ -35,7 +35,7 @@ export function Lock({ copy, show }: { copy: LockScreenCopy; show: LockShow }) {
       </div>
 
       {show === "activity" ? (
-        <div style={{ ...column(10), padding: "14px 16px", background: CARD, borderRadius: 22 }}>
+        <div data-part="activity" style={{ ...column(10), padding: "14px 16px", background: CARD, borderRadius: 22 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <AppBadge size={22} radius={6} bolt={14} />
             <span style={{ fontSize: 13, color: SOFT, flexGrow: 1 }}>{copy.app}</span>
@@ -58,7 +58,7 @@ export function Lock({ copy, show }: { copy: LockScreenCopy; show: LockShow }) {
           </div>
         </div>
       ) : (
-        <div style={{ display: "flex", gap: 10, padding: "12px 14px", background: CARD, borderRadius: 20 }}>
+        <div data-part="notification" style={{ display: "flex", gap: 10, padding: "12px 14px", background: CARD, borderRadius: 20 }}>
           <AppBadge size={38} radius={9} bolt={20} />
           <div style={{ ...column(2), minWidth: 0 }}>
             <div style={{ ...between, alignItems: "flex-start", gap: 8 }}>

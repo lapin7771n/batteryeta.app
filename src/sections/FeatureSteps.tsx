@@ -85,14 +85,16 @@ export function FeatureSteps({ copy }: { copy: Copy }) {
             data-step={index + 1}
             className="flex min-h-[55vh] items-start pt-4 pb-10 lg:min-h-[80vh] lg:items-center lg:py-0"
           >
-            <Card className="w-full">
+            <Card className="w-full [--card-spacing:--spacing(7)]">
               <CardHeader>
-                <CardTitle className="text-lg font-bold">{step.title}</CardTitle>
+                <CardTitle className="text-[clamp(26px,3vw,38px)] leading-[1.1] font-extrabold tracking-[-0.02em]">
+                  {step.title}
+                </CardTitle>
               </CardHeader>
-              <CardContent className="grid gap-2 text-base text-ink-soft">
+              <CardContent className="grid gap-4 text-[clamp(18px,1.5vw,21px)] leading-[1.5] text-ink-soft">
                 <p className="m-0">{step.body}</p>
                 {step.regionsLead ? (
-                  <p className="m-0">
+                  <p className="m-0 text-base leading-[1.6]">
                     <span className="font-semibold text-foreground">
                       {step.regionsLead}
                     </span>{" "}

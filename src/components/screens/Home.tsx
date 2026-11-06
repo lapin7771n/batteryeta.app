@@ -87,6 +87,7 @@ export function Home({
       </div>
 
       <div
+        data-part="summary"
         className="screen-fade"
         style={{
           display: "flex",
@@ -153,6 +154,7 @@ export function Home({
       </div>
 
       <div
+        data-part="verdict"
         className="screen-fade"
         style={{
           ...column(12),

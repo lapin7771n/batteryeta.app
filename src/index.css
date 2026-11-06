@@ -159,6 +159,7 @@
   padding: 0.75rem 0;
   background: color-mix(in srgb, var(--bg) 80%, transparent);
   backdrop-filter: blur(12px);
+  overflow: clip;
 }
 
 @media (min-width: 1024px) {
@@ -172,5 +173,6 @@
     padding: 0;
     background: none;
     backdrop-filter: none;
+    overflow: visible;
   }
 }

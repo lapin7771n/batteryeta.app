@@ -26,6 +26,7 @@ export function Week({ copy, brand }: { copy: WeekScreenCopy; brand: string }) {
       </div>
 
       <div
+        data-part="week"
         style={{
           ...column(12),
           padding: 14,
