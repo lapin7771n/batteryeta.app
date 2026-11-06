@@ -227,7 +227,7 @@ export const en: Copy = {
       },
       {
         q: "Is this an official Marstek app?",
-        a: "No. Battery ETA is an independent app, not made by, endorsed by or affiliated with Marstek. Mykyta Lapin, a Venus E 3.0 owner in Ukraine, made it.",
+        a: "No. Battery ETA is an independent app, not made by, endorsed by or affiliated with Marstek.",
       },
     ],
   },
