@@ -4,6 +4,7 @@ import { createServer } from "node:http"
 import path from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { PhoneFrame } from "../src/components/PhoneFrame"
+import { Home } from "../src/components/screens/Home"
 import { COPY } from "../src/content"
 import type { Copy, Lang } from "../src/content/types"
 
@@ -58,11 +59,9 @@ function OgCard({ copy }: { copy: Copy }) {
         }}
       />
       <div style={{ position: "absolute", left: PHONE_LEFT, top: PHONE_TOP }}>
-        <PhoneFrame
-          copy={copy.screen}
-          brand={copy.brand}
-          width={PHONE_WIDTH}
-        />
+        <PhoneFrame label={copy.screens.descriptions.home} width={PHONE_WIDTH}>
+          <Home copy={copy.screens.home} variant="lasts" brand={copy.brand} />
+        </PhoneFrame>
       </div>
       <div
         style={{

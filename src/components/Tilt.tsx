@@ -1,9 +1,13 @@
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
-import { useRef, useSyncExternalStore, type ReactNode } from "react"
+import { useRef, useSyncExternalStore, type ReactNode, type RefObject } from "react"
+
+type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"]
 
 type TiltProps = {
   axis: "rotateX" | "rotateY"
   from: [number, number]
+  target?: RefObject<HTMLElement | null>
+  offset?: ScrollOffset
   className?: string
   children: ReactNode
 }
@@ -12,7 +16,7 @@ function subscribeNothing(): () => void {
   return () => {}
 }
 
-export function Tilt({ axis, from, className, children }: TiltProps) {
+export function Tilt({ axis, from, target, offset, className, children }: TiltProps) {
   const ref = useRef<HTMLDivElement>(null)
   const mounted = useSyncExternalStore(
     subscribeNothing,
@@ -21,8 +25,8 @@ export function Tilt({ axis, from, className, children }: TiltProps) {
   )
   const reduce = useReducedMotion() === true
   const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
+    target: target ?? ref,
+    offset: offset ?? ["start end", "end start"],
   })
   const rotate = useTransform(scrollYProgress, [0, 1], mounted && reduce ? [0, 0] : from)
   const style = axis === "rotateX" ? { rotateX: rotate } : { rotateY: rotate }

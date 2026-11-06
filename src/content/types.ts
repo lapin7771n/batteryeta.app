@@ -10,20 +10,36 @@ export type Faq = { q: string; a: string }
 
 export type ScreenTotal = { label: string; value: string; unit?: string }
 
-export type ScreenCopy = {
-  description: string
+export type ScreenId =
+  | "home"
+  | "charging"
+  | "verdict"
+  | "activity"
+  | "notification"
+  | "week"
+
+export type HomeVerdict = {
+  tone: "good" | "bad"
+  label: string
+  text: string
+  cut?: string
+}
+
+export type HomeVariant = {
   statusTime: string
   percent: number
-  emptyIn: string
+  label: string
   hours: number
   minutes: number
-  hoursUnit: string
-  minutesUnit: string
   power: string
   updated: string
-  verdictLabel: string
-  verdict: string
+  verdict: HomeVerdict | null
   schedule: string
+}
+
+export type HomeScreenCopy = {
+  hoursUnit: string
+  minutesUnit: string
   change: string
   today: string
   week: string
@@ -32,7 +48,47 @@ export type ScreenCopy = {
   axisMiddle: string
   axisNow: string
   totals: ScreenTotal[]
+  lasts: HomeVariant
+  charging: HomeVariant
+  short: HomeVariant
 }
+
+export type LockScreenCopy = {
+  date: string
+  time: string
+  app: string
+  code: string
+  emptyLabel: string
+  emptyTime: string
+  usage: string
+  grid: string
+  notificationTitle: string
+  notificationTime: string
+  notificationBody: string
+}
+
+export type WeekRow = { day: string; charged: string; used: string }
+
+export type WeekScreenCopy = {
+  statusTime: string
+  now: string
+  today: string
+  week: string
+  charged: string
+  used: string
+  days: string[]
+  totals: ScreenTotal[]
+  rows: WeekRow[]
+}
+
+export type ScreensCopy = {
+  descriptions: Record<ScreenId, string>
+  home: HomeScreenCopy
+  lock: LockScreenCopy
+  week: WeekScreenCopy
+}
+
+export type FeatureStep = TextCard & { screen: ScreenId; regionsLead?: string }
 
 export type HeadCopy = {
   title: string
@@ -62,7 +118,7 @@ export type Copy = {
     badgeAlt: string
     badgeSrc: string
   }
-  screen: ScreenCopy
+  screens: ScreensCopy
   og: { line1: string; line2: string }
   devices: {
     title: string
@@ -70,14 +126,7 @@ export type Copy = {
     soonBadge: string
   }
   features: {
-    title: string
-    cards: TextCard[]
-  }
-  useful: {
-    title: string
-    outage: TextCard & { regionsLead: string }
-    notifications: TextCard
-    liveActivity: TextCard
+    steps: FeatureStep[]
   }
   setup: {
     title: string

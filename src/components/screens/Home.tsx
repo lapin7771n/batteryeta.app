@@ -1,38 +1,13 @@
 import type { CSSProperties } from "react"
-import type { ScreenCopy } from "../content/types"
-
-const GREEN = "#3DDC97"
-const AMBER = "#FFB547"
-const RED = "#FF6B5E"
-const LABEL = "#8E8E93"
-const ROW = "#1C1C1E"
-const CHIP = "#2C2C2E"
-const RULE = "#38383A"
-const PANEL = "#0F0F12"
-const EDGE = "#2A2A30"
-const TRACK = "#24242A"
+import type { HomeScreenCopy } from "../../content/types"
+import { AMBER, between, center, CHIP, column, EDGE, GREEN, LABEL, PANEL, RED, ROW, RULE, screenBase, stroke, TRACK } from "./tokens"
+import { StatusBar } from "./chrome"
 
 const GAUGE_RADIUS = 50
 const GAUGE_LENGTH = 2 * Math.PI * GAUGE_RADIUS
 const GAUGE_SWEEP = 0.75
 
-const FONT = "ui-rounded, 'SF Pro Rounded', 'Nunito Variable', 'Nunito', system-ui, sans-serif"
-
-const column = (gap: number): CSSProperties => ({
-  display: "flex",
-  flexDirection: "column",
-  gap,
-})
-const center: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}
-const between: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-}
+const unit: CSSProperties = { fontSize: 18, color: "#8E8E97" }
 const roundButton: CSSProperties = {
   ...center,
   width: 44,
@@ -43,17 +18,8 @@ const roundButton: CSSProperties = {
   color: GREEN,
   padding: 0,
 }
-const unit: CSSProperties = { fontSize: 18, color: "#8E8E97" }
-const stroke = {
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round",
-  strokeLinejoin: "round",
-} as const
 
-const LINE_PATH =
-  "M0,58 L72.9,60 L145.8,64 L218.7,17 L291.6,23 L326,41"
+const LINE_PATH = "M0,58 L72.9,60 L145.8,64 L218.7,17 L291.6,23 L326,41"
 
 const BARS: readonly { x: number; y: number; width: number; height: number; rx: number; color: string }[] = [
   { x: 3, y: 28, width: 18, height: 5, rx: 2, color: AMBER },
@@ -72,31 +38,36 @@ const BARS: readonly { x: number; y: number; width: number; height: number; rx: 
   { x: 315, y: 28, width: 10, height: 26, rx: 2, color: AMBER },
 ]
 
-export const SCREEN_WIDTH = 390
-export const SCREEN_HEIGHT = 844
+export type HomeVariantId = "lasts" | "charging" | "short"
+export type HomeFocus = "summary" | "verdict"
 
-export function AppScreen({ copy, brand }: { copy: ScreenCopy; brand: string }) {
-  const filled = copy.percent / 100
+export function Home({
+  copy,
+  variant,
+  brand,
+  focus,
+}: {
+  copy: HomeScreenCopy
+  variant: HomeVariantId
+  brand: string
+  focus?: HomeFocus
+}) {
+  const data = copy[variant]
+  const charging = variant === "charging"
+  const accent = charging ? GREEN : AMBER
+  const filled = data.percent / 100
   const trackLength = GAUGE_LENGTH * GAUGE_SWEEP
   const dash = (length: number) => `${length.toFixed(1)} ${GAUGE_LENGTH.toFixed(1)}`
+  const dim = (part: HomeFocus | "other"): CSSProperties => ({
+    opacity: focus === undefined || focus === part ? 1 : 0.4,
+  })
+  const verdict = data.verdict
+  const verdictColor = verdict?.tone === "bad" ? RED : GREEN
 
   return (
-    <div
-      style={{
-        ...column(16),
-        width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT,
-        boxSizing: "border-box",
-        padding: "56px 16px 0",
-        background: "#000000",
-        color: "#FFFFFF",
-        fontFamily: FONT,
-        lineHeight: "normal",
-        overflow: "hidden",
-        textAlign: "left",
-      }}
-    >
-      <div style={between}>
+    <div style={screenBase("#000000", "56px 16px 0")}>
+      <StatusBar time={data.statusTime} />
+      <div className="screen-fade" style={{ ...between, ...dim("other") }}>
         <div style={{ margin: 0, fontSize: 28, fontWeight: 800 }}>{brand}</div>
         <div style={{ display: "flex", gap: 4 }}>
           <div style={roundButton}>
@@ -116,6 +87,7 @@ export function AppScreen({ copy, brand }: { copy: ScreenCopy; brand: string }) 
       </div>
 
       <div
+        className="screen-fade"
         style={{
           display: "flex",
           alignItems: "center",
@@ -124,6 +96,7 @@ export function AppScreen({ copy, brand }: { copy: ScreenCopy; brand: string }) 
           background: PANEL,
           border: `0.5px solid ${EDGE}`,
           borderRadius: 22,
+          ...dim("summary"),
         }}
       >
         <div style={{ position: "relative", width: 120, height: 120, flexShrink: 0 }}>
@@ -144,7 +117,7 @@ export function AppScreen({ copy, brand }: { copy: ScreenCopy; brand: string }) 
               cy="60"
               r={GAUGE_RADIUS}
               fill="none"
-              stroke={AMBER}
+              stroke={accent}
               strokeWidth="12"
               strokeLinecap="round"
               strokeDasharray={dash(trackLength * filled)}
@@ -160,64 +133,81 @@ export function AppScreen({ copy, brand }: { copy: ScreenCopy; brand: string }) 
               fontWeight: 800,
             }}
           >
-            {copy.percent}
+            {data.percent}
             <span style={{ fontSize: 18, color: "#8E8E97", fontWeight: 700 }}>%</span>
           </div>
         </div>
         <div style={{ ...column(4), minWidth: 0 }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 1.6, color: LABEL }}>
-            {copy.emptyIn}
+            {data.label}
           </div>
           <div style={{ fontSize: 34, fontWeight: 800, lineHeight: 1.05 }}>
-            {copy.hours}
+            {data.hours}
             <span style={unit}> {copy.hoursUnit} </span>
-            {copy.minutes}
+            {data.minutes}
             <span style={unit}> {copy.minutesUnit}</span>
           </div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: AMBER }}>{copy.power}</div>
-          <div style={{ fontSize: 13, color: LABEL }}>{copy.updated}</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: accent }}>{data.power}</div>
+          <div style={{ fontSize: 13, color: LABEL }}>{data.updated}</div>
         </div>
       </div>
 
       <div
+        className="screen-fade"
         style={{
           ...column(12),
           padding: "14px 16px",
           background: ROW,
           borderRadius: 18,
+          ...dim("verdict"),
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div
-            style={{
-              ...center,
-              width: 36,
-              height: 36,
-              borderRadius: 18,
-              background: "rgba(61,220,151,0.16)",
-              color: GREEN,
-              flexShrink: 0,
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" {...stroke} strokeWidth={2.6} aria-hidden="true">
-              <path d="M5 12.5l4.5 4.5L19 7.5" />
-            </svg>
-          </div>
-          <div style={column(2)}>
-            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, color: GREEN }}>
-              {copy.verdictLabel}
+        {verdict ? (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div
+                style={{
+                  ...center,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 18,
+                  background: verdict.tone === "bad" ? "rgba(255,107,94,0.16)" : "rgba(61,220,151,0.16)",
+                  color: verdictColor,
+                  flexShrink: 0,
+                  fontWeight: 800,
+                  fontSize: 18,
+                }}
+              >
+                {verdict.tone === "bad" ? (
+                  "!"
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" {...stroke} strokeWidth={2.6} aria-hidden="true">
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                )}
+              </div>
+              <div style={column(2)}>
+                <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, color: verdictColor }}>
+                  {verdict.label}
+                </div>
+                <div style={{ fontSize: 15 }}>{verdict.text}</div>
+              </div>
             </div>
-            <div style={{ fontSize: 15 }}>{copy.verdict}</div>
-          </div>
-        </div>
+            {verdict.cut ? (
+              <div style={{ fontSize: 14, padding: "10px 12px", background: CHIP, borderRadius: 12 }}>
+                {verdict.cut}
+              </div>
+            ) : null}
+          </>
+        ) : null}
         <div
           style={{
             ...between,
-            borderTop: `0.5px solid ${RULE}`,
-            paddingTop: 10,
+            borderTop: verdict ? `0.5px solid ${RULE}` : undefined,
+            paddingTop: verdict ? 10 : 0,
           }}
         >
-          <span style={{ fontSize: 13, color: LABEL }}>{copy.schedule}</span>
+          <span style={{ fontSize: 13, color: LABEL }}>{data.schedule}</span>
           <div
             style={{
               ...center,
@@ -236,12 +226,14 @@ export function AppScreen({ copy, brand }: { copy: ScreenCopy; brand: string }) 
       </div>
 
       <div
+        className="screen-fade"
         style={{
           ...column(10),
           padding: "14px 16px 12px",
           background: PANEL,
           border: `0.5px solid ${EDGE}`,
           borderRadius: 22,
+          ...dim("other"),
         }}
       >
         <div style={between}>
@@ -308,11 +300,13 @@ export function AppScreen({ copy, brand }: { copy: ScreenCopy; brand: string }) 
       </div>
 
       <div
+        className="screen-fade"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
           background: ROW,
           borderRadius: 18,
+          ...dim("other"),
         }}
       >
         {copy.totals.map((total, index) => (

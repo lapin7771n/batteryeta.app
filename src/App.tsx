@@ -4,12 +4,10 @@ import type { Copy } from "@/content/types"
 import { Closing } from "@/sections/Closing"
 import { Devices } from "@/sections/Devices"
 import { Faq } from "@/sections/Faq"
-import { Features } from "@/sections/Features"
+import { FeatureSteps } from "@/sections/FeatureSteps"
 import { Footer } from "@/sections/Footer"
-import { Hero } from "@/sections/Hero"
 import { Limits } from "@/sections/Limits"
 import { Setup } from "@/sections/Setup"
-import { UsefulFeatures } from "@/sections/UsefulFeatures"
 import { relabelStoreLinks } from "@/relabel"
 
 export function App({ copy }: { copy: Copy }) {
@@ -44,10 +42,8 @@ export function App({ copy }: { copy: Copy }) {
           </div>
         </header>
         <main className="min-w-0">
-          <Hero copy={copy} />
+          <FeatureSteps copy={copy} />
           <Devices copy={copy} />
-          <Features copy={copy} />
-          <UsefulFeatures copy={copy} />
           <Setup copy={copy} />
           <Faq copy={copy} />
           <Closing copy={copy} />
