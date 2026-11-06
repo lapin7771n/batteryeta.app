@@ -7,6 +7,22 @@ const PRIVACY = "https://lapin7771n.github.io/marstek_analytics/privacy/"
 
 export const uk: Copy = {
   lang: "uk",
+  head: {
+    title: "Скільки протримає Marstek Venus E 3.0 — Battery ETA для iPhone",
+    description:
+      "Застосунок для iPhone і iPad показує, скільки годин Marstek Venus E 3.0 пропрацює за поточного навантаження і чи вистачить заряду до кінця відключення. Читає батарею через домашній Wi‑Fi.",
+    ogTitle: "Скільки ще протримає ваш Marstek Venus E 3.0?",
+    ogDescription:
+      "Час роботи батареї за поточного навантаження на iPhone, у віджетах і на екрані блокування. З графіком відключень: чи вистачить до повернення світла.",
+    ogImageAlt: "Екран Battery ETA: 58 % заряду, до розряду 3 год 30 хв",
+    ogLocale: "uk_UA",
+    ogLocaleAlternate: "en_US",
+    appAlternateName: "Battery ETA: домашня батарея",
+    appDescription:
+      "Застосунок для iPhone і iPad, який показує, скільки Marstek Venus E 3.0 пропрацює за поточного навантаження. Читає батарею через Local API в домашній мережі Wi‑Fi і нічого в ній не змінює.",
+    appOperatingSystem: "iOS 17, iPadOS 17 або новіша",
+    appStoreUrl: "https://apps.apple.com/ua/app/id6822926943",
+  },
   homeHref: "/",
   otherLang: { label: "English", href: "/en/", lang: "en" },
   brand: "Battery ETA",

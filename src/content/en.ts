@@ -7,6 +7,22 @@ const PRIVACY = "https://lapin7771n.github.io/marstek_analytics/privacy/"
 
 export const en: Copy = {
   lang: "en",
+  head: {
+    title: "Battery ETA: how long your Marstek Venus E 3.0 lasts, on iPhone",
+    description:
+      "An iPhone and iPad app with widgets that shows how long a Marstek Venus E 3.0 lasts at the current load. Reads the battery over home Wi‑Fi through the Local API, without the Marstek cloud.",
+    ogTitle: "How long will your Marstek Venus E 3.0 last?",
+    ogDescription:
+      "Time left at the current load, on iPhone, in widgets and on the Lock Screen. Reads the battery over home Wi‑Fi, read-only, without the Marstek cloud.",
+    ogImageAlt: "Battery ETA home screen: 49 % charge, empty in 2 h 50 min",
+    ogLocale: "en_US",
+    ogLocaleAlternate: "uk_UA",
+    appAlternateName: "Battery ETA: Home Backup",
+    appDescription:
+      "An iPhone and iPad app that shows how long a Marstek Venus E 3.0 lasts at the current load. It reads the battery through the Local API on the home Wi‑Fi network and never changes a setting.",
+    appOperatingSystem: "iOS 17 or later, iPadOS 17 or later",
+    appStoreUrl: "https://apps.apple.com/app/id6822926943",
+  },
   homeHref: "/en/",
   otherLang: { label: "Українською", href: "/", lang: "uk" },
   brand: "Battery ETA",

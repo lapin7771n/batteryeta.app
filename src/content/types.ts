@@ -10,8 +10,23 @@ export type RuntimeRow = { load: string; full: string; half: string }
 
 export type Faq = { q: string; a: string }
 
+export type HeadCopy = {
+  title: string
+  description: string
+  ogTitle: string
+  ogDescription: string
+  ogImageAlt: string
+  ogLocale: string
+  ogLocaleAlternate: string
+  appAlternateName: string
+  appDescription: string
+  appOperatingSystem: string
+  appStoreUrl: string
+}
+
 export type Copy = {
   lang: Lang
+  head: HeadCopy
   homeHref: string
   otherLang: { label: string; href: string; lang: Lang }
   brand: string
