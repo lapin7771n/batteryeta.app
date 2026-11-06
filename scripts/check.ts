@@ -10,10 +10,7 @@ import { CT_MAX_LENGTH } from "../src/relabel"
 const root = path.resolve(import.meta.dirname, "..")
 const dist = path.join(root, "dist")
 
-const PENDING_ASSETS: readonly string[] = [
-  "/og-uk.png",
-  "/og-en.png",
-]
+const PENDING_ASSETS: readonly string[] = []
 
 const LANGS: readonly Lang[] = ["uk", "en"]
 const failures: string[] = []

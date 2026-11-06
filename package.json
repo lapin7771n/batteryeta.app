@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && tsx scripts/prerender.ts",
     "check": "tsx scripts/check.ts",
+    "og": "tsx --tsconfig tsconfig.scripts.json scripts/og.tsx",
     "lint": "oxlint",
     "preview": "vite preview"
   },
