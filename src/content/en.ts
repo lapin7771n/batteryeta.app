@@ -164,7 +164,7 @@ export const en: Copy = {
         a: "No. Battery ETA only reads the battery status. Modes, reserve and schedules stay in the Marstek app.",
       },
       {
-        q: "Which cities have outage schedules?",
+        q: "Which regions have outage schedules?",
         a: `Outage schedule integration for: ${regionsText("en")}. Elsewhere the app shows the battery time left without the "will it last" answer.`,
       },
       {
@@ -187,11 +187,6 @@ export const en: Copy = {
       "Your phone must be on the same network as your Marstek device.",
       "On the App Store now. Coming soon to Google Play.",
     ],
-    more: {
-      before: "All limits: ",
-      link: { label: "support page", href: `${SUPPORT}#limits` },
-      after: ".",
-    },
   },
   footer: {
     support: { label: "Support", href: SUPPORT },

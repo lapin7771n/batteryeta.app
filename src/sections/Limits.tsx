@@ -1,4 +1,3 @@
-import { NoteLine } from "@/components/NoteLine"
 import { Section, SectionTitle } from "@/components/Section"
 import type { Copy } from "@/content/types"
 
@@ -7,7 +6,7 @@ export function Limits({ copy }: { copy: Copy }) {
   return (
     <Section id="limits">
       <SectionTitle>{limits.title}</SectionTitle>
-      <ul className="m-0 mb-3 grid list-none gap-2 p-0">
+      <ul className="m-0 grid list-none gap-2 p-0">
         {limits.items.map((item) => (
           <li
             key={item}
@@ -17,7 +16,6 @@ export function Limits({ copy }: { copy: Copy }) {
           </li>
         ))}
       </ul>
-      <NoteLine note={limits.more} />
     </Section>
   )
 }

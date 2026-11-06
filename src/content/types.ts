@@ -104,7 +104,6 @@ export type Copy = {
   limits: {
     title: string
     items: string[]
-    more: NoteWithLink
   }
   footer: {
     support: Link
