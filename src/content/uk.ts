@@ -241,8 +241,7 @@ export const uk: Copy = {
   footer: {
     support: { label: "Підтримка", href: SUPPORT },
     privacy: { label: "Конфіденційність", href: PRIVACY },
-    author:
-      "Я Микита. У мене вдома Marstek Venus E 3.0, і я написав Battery ETA, щоб під час відключень знати, на скільки вистачить батареї.",
+    developer: { label: "Розробник:", link: { label: "nikilapi.com", href: "https://nikilapi.com" } },
     disclaimer:
       "Незалежний застосунок, не повʼязаний з Marstek. Apple, App Store, iPhone та iPad є товарними знаками Apple Inc.",
   },

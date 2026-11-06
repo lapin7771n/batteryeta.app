@@ -11,7 +11,10 @@ export function Footer({ copy }: { copy: Copy }) {
           {otherLang.label}
         </a>
       </nav>
-      <p className="mb-3">{footer.author}</p>
+      <p className="mb-3">
+        {footer.developer.label}{" "}
+        <a href={footer.developer.link.href}>{footer.developer.link.label}</a>
+      </p>
       <p className="mb-3">{footer.disclaimer}</p>
     </footer>
   )

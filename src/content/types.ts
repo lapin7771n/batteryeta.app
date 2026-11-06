@@ -148,7 +148,7 @@ export type Copy = {
   footer: {
     support: Link
     privacy: Link
-    author: string
+    developer: { label: string; link: Link }
     disclaimer: string
   }
 }

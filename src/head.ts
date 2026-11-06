@@ -56,7 +56,7 @@ export function renderHead(copy: Copy): string {
     image: `${ORIGIN}${ogImagePath(lang)}`,
     installUrl: head.appStoreUrl,
     sameAs: [head.appStoreUrl],
-    author: { "@type": "Person", name: "Mykyta Lapin" },
+    author: { "@type": "Person", name: "Mykyta Lapin", url: "https://nikilapi.com" },
   }
   const faq = {
     "@context": "https://schema.org",

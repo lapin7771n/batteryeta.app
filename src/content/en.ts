@@ -245,8 +245,7 @@ export const en: Copy = {
   footer: {
     support: { label: "Support", href: SUPPORT },
     privacy: { label: "Privacy", href: PRIVACY },
-    author:
-      "I'm Mykyta. I have a Marstek Venus E 3.0 at home in Ukraine and wrote Battery ETA to know how long it lasts during power cuts.",
+    developer: { label: "Developer:", link: { label: "nikilapi.com", href: "https://nikilapi.com" } },
     disclaimer:
       "Battery ETA is an independent app, not affiliated with Marstek. Apple, App Store, iPhone and iPad are trademarks of Apple Inc.",
   },
