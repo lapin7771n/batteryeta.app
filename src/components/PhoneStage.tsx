@@ -38,7 +38,7 @@ const ZOOM: Record<ScreenId, Zoom | null> = {
 }
 
 const MOBILE_FOCUS_Y = 0.275
-const MOBILE_FIT_WIDTH = 0.92
+const MOBILE_SIDE_INSET = 16
 const CARD_BOTTOM_GAP = 24
 const FOCUS_FIT_HEIGHT = 0.9
 
@@ -74,7 +74,6 @@ function zoomTransform(
   }
   const width = stage.offsetWidth
   const height = stage.offsetHeight
-  const partWidth = (inner.width * width) / outer.width
   const partHeight = (inner.height * height) / outer.height
   const frame = stage.parentElement?.getBoundingClientRect()
   const pinned = stage.closest<HTMLElement>(".phone-stage")
@@ -82,7 +81,7 @@ function zoomTransform(
   const left = frame.left
   const top = parseFloat(getComputedStyle(pinned).top)
   const focus = cardFocus(step, top)
-  const fit = Math.min(zoom.scale, (window.innerWidth * MOBILE_FIT_WIDTH) / partWidth)
+  const fit = Math.min(zoom.scale, (window.innerWidth - 2 * MOBILE_SIDE_INSET) / width)
   const scale = focus ? Math.min(fit, focus.maxHeight / partHeight) : fit
   const focusY = focus ? focus.y : window.innerHeight * MOBILE_FOCUS_Y
   const dx = window.innerWidth / 2 - (left + width / 2) - scale * (x - 0.5) * width
