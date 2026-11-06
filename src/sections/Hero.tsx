@@ -1,4 +1,4 @@
-import { RingDockSlot } from "@/components/RingDockSlot"
+import { RingHeroAnchor } from "@/components/RingDock"
 import { Tilt } from "@/components/Tilt"
 import { storeUrl } from "@/content/store"
 import type { Copy } from "@/content/types"
@@ -27,9 +27,9 @@ export function Hero({ copy }: { copy: Copy }) {
             height={48}
           />
         </a>
+        <RingHeroAnchor />
       </div>
       <div className="relative justify-self-center">
-        <RingDockSlot />
         <Tilt axis="rotateY" from={[-18, 18]}>
           <figure className="m-0 w-[min(300px,80vw)] overflow-hidden rounded-[40px] border border-[var(--shot-card-border)] shadow-[var(--shot-card)]">
             <img
