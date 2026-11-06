@@ -8,7 +8,6 @@ import { Features } from "@/sections/Features"
 import { Footer } from "@/sections/Footer"
 import { Hero } from "@/sections/Hero"
 import { Limits } from "@/sections/Limits"
-import { Runtime } from "@/sections/Runtime"
 import { Setup } from "@/sections/Setup"
 import { UsefulFeatures } from "@/sections/UsefulFeatures"
 import { relabelStoreLinks } from "@/relabel"
@@ -49,7 +48,6 @@ export function App({ copy }: { copy: Copy }) {
           <Devices copy={copy} />
           <Features copy={copy} />
           <UsefulFeatures copy={copy} />
-          <Runtime copy={copy} />
           <Setup copy={copy} />
           <Faq copy={copy} />
           <Closing copy={copy} />

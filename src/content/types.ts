@@ -6,8 +6,6 @@ export type NoteWithLink = { before: string; link: Link; after: string }
 
 export type TextCard = { title: string; body: string }
 
-export type RuntimeRow = { load: string; full: string; half: string }
-
 export type Faq = { q: string; a: string }
 
 export type ScreenTotal = { label: string; value: string; unit?: string }
@@ -80,13 +78,6 @@ export type Copy = {
     outage: TextCard & { regionsLead: string }
     notifications: TextCard
     liveActivity: TextCard
-  }
-  runtime: {
-    title: string
-    intro: string
-    headers: { load: string; full: string; half: string }
-    rows: RuntimeRow[]
-    note: string
   }
   setup: {
     title: string

@@ -105,19 +105,6 @@ export const en: Copy = {
       body: "During an outage a Live Activity shows the charge, the power and the time the battery runs out.",
     },
   },
-  runtime: {
-    title: "How long a full Venus E 3.0 lasts",
-    intro:
-      "The Venus E 3.0 holds 5.12 kWh. This is what the Battery ETA formula gives with a 12 % reserve and an allowance for conversion losses:",
-    headers: { load: "Load", full: "100 % charge", half: "50 % charge" },
-    rows: [
-      { load: "100 W (router, lights, chargers)", full: "≈ 41 h 20 min", half: "≈ 17 h 51 min" },
-      { load: "300 W", full: "≈ 13 h 47 min", half: "≈ 5 h 57 min" },
-      { load: "500 W", full: "≈ 8 h 16 min", half: "≈ 3 h 34 min" },
-      { load: "1000 W", full: "≈ 4 h 8 min", half: "≈ 1 h 47 min" },
-    ],
-    note: "These assume a steady load. Switch on a kettle and the time changes. The app recalculates it with every new reading from the battery.",
-  },
   setup: {
     title: "Set up",
     steps: [
