@@ -16,7 +16,7 @@ export function App({ copy }: { copy: Copy }) {
   return (
     <>
       <div className="mx-auto max-w-[980px] px-5">
-        <header className="flex items-center justify-between gap-3 py-4">
+        <header className="flex items-center justify-between gap-3 py-4 max-lg:snap-start">
           <a
             className="flex items-center gap-2.5 text-lg font-bold text-foreground no-underline"
             href={copy.homeHref}

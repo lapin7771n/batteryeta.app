@@ -158,6 +158,14 @@
 }
 
 @media (max-width: 1023.98px) {
+  html[data-snap] {
+    scroll-snap-type: y mandatory;
+  }
+
+  html[data-snap] #devices {
+    scroll-snap-align: start;
+  }
+
   [data-tilt-desktop] {
     transform: none !important;
   }

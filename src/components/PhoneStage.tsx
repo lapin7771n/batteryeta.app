@@ -39,8 +39,23 @@ const ZOOM: Record<ScreenId, Zoom | null> = {
 
 const MOBILE_FOCUS_Y = 0.275
 const MOBILE_FIT_WIDTH = 0.92
+const CARD_BOTTOM_GAP = 24
+const FOCUS_FIT_HEIGHT = 0.9
 
-function zoomTransform(stage: HTMLElement, active: ScreenId, desktop: boolean): string {
+function cardFocus(step: number, freeTop: number): { y: number; maxHeight: number } | null {
+  const card = document.querySelector<HTMLElement>(`[data-step="${step}"] [data-slot="card"]`)
+  if (!card) return null
+  const cardTop = window.innerHeight - CARD_BOTTOM_GAP - card.offsetHeight
+  if (cardTop <= freeTop) return null
+  return { y: (freeTop + cardTop) / 2, maxHeight: (cardTop - freeTop) * FOCUS_FIT_HEIGHT }
+}
+
+function zoomTransform(
+  stage: HTMLElement,
+  active: ScreenId,
+  desktop: boolean,
+  step: number
+): string {
   const zoom = ZOOM[active]
   if (!zoom) return ""
   const part = stage.querySelector<HTMLElement>(
@@ -60,30 +75,42 @@ function zoomTransform(stage: HTMLElement, active: ScreenId, desktop: boolean): 
   const width = stage.offsetWidth
   const height = stage.offsetHeight
   const partWidth = (inner.width * width) / outer.width
-  const scale = Math.min(zoom.scale, (window.innerWidth * MOBILE_FIT_WIDTH) / partWidth)
+  const partHeight = (inner.height * height) / outer.height
   const frame = stage.parentElement?.getBoundingClientRect()
   const pinned = stage.closest<HTMLElement>(".phone-stage")
   if (!frame || !pinned) return ""
   const left = frame.left
   const top = parseFloat(getComputedStyle(pinned).top)
+  const focus = cardFocus(step, top)
+  const fit = Math.min(zoom.scale, (window.innerWidth * MOBILE_FIT_WIDTH) / partWidth)
+  const scale = focus ? Math.min(fit, focus.maxHeight / partHeight) : fit
+  const focusY = focus ? focus.y : window.innerHeight * MOBILE_FOCUS_Y
   const dx = window.innerWidth / 2 - (left + width / 2) - scale * (x - 0.5) * width
-  const dy = window.innerHeight * MOBILE_FOCUS_Y - (top + height / 2) - scale * (y - 0.5) * height
+  const dy = focusY - (top + height / 2) - scale * (y - 0.5) * height
   return `translate(${dx}px, ${dy}px) scale(${scale})`
 }
 
-export function PhoneStage({ copy, active }: { copy: Copy; active: ScreenId }) {
+export function PhoneStage({
+  copy,
+  active,
+  step,
+}: {
+  copy: Copy
+  active: ScreenId
+  step: number
+}) {
   const stage = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {
     const element = stage.current
     if (!element) return
     const apply = () => {
       const desktop = window.matchMedia(DESKTOP_QUERY).matches
-      element.style.transform = zoomTransform(element, active, desktop)
+      element.style.transform = zoomTransform(element, active, desktop, step)
     }
     apply()
     window.addEventListener("resize", apply)
     return () => window.removeEventListener("resize", apply)
-  }, [active])
+  }, [active, step])
   return (
     <div
       ref={stage}
