@@ -181,19 +181,21 @@ function Gauge({ progress, reduceMotion, onFirstFrame }: GaugeProps) {
 type RingSceneProps = {
   progress: MotionValue<number>
   reduceMotion: boolean
+  maxDpr: number
   onReady: () => void
 }
 
 export default function RingScene({
   progress,
   reduceMotion,
+  maxDpr,
   onReady,
 }: RingSceneProps) {
   return (
     <Canvas
       frameloop="demand"
       resize={{ offsetSize: true }}
-      dpr={[1, 2]}
+      dpr={[1, maxDpr]}
       camera={{ position: [0, 0, 7], fov: 30 }}
       gl={{ alpha: true, antialias: false, powerPreference: "low-power" }}
     >

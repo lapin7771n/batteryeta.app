@@ -10,7 +10,7 @@ export function Limits({ copy }: { copy: Copy }) {
         {limits.items.map((item) => (
           <li
             key={item}
-            className="rounded-[18px] border-l-[3px] border-warn bg-card px-4 py-3"
+            className="rounded-[18px] border-l-[3px] border-warn bg-card/60 backdrop-blur-md px-4 py-3"
           >
             {item}
           </li>

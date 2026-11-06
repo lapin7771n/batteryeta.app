@@ -1,4 +1,3 @@
-import { RingHeroAnchor } from "@/components/RingDock"
 import { PhoneFrame } from "@/components/PhoneFrame"
 import { Tilt } from "@/components/Tilt"
 import { storeUrl } from "@/content/store"
@@ -28,7 +27,6 @@ export function Hero({ copy }: { copy: Copy }) {
             height={48}
           />
         </a>
-        <RingHeroAnchor />
       </div>
       <div className="relative justify-self-center">
         <Tilt axis="rotateY" from={[-18, 18]}>

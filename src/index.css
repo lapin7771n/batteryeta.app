@@ -128,3 +128,12 @@
   transform: scale(0.7);
   transform: scale(tan(atan2(100cqw, 410px)));
 }
+
+.ring-backdrop {
+  width: 112vmin;
+  height: 112vmin;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  opacity: 0.7;
+}

@@ -10,7 +10,7 @@ export function Faq({ copy }: { copy: Copy }) {
         {faq.items.map((item) => (
           <details
             key={item.q}
-            className="group rounded-[18px] bg-card px-4 open:ring-1 open:ring-foreground/10"
+            className="group rounded-[18px] bg-card/60 backdrop-blur-md px-4 open:ring-1 open:ring-foreground/10"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-3.5 font-[650] [&::-webkit-details-marker]:hidden">
               {item.q}
