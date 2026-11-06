@@ -1,0 +1,183 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/nunito/wght.css";
+
+@font-face {
+  font-family: "Onest Cyrillic";
+  src: url("/fonts/onest-cyrillic-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Onest Latin";
+  src: url("/fonts/onest-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+
+:root {
+  --canvas: #000000;
+  --bg: #0f0f12;
+  --row: #1c1c1e;
+  --chip: #2c2c2e;
+  --edge: #2a2a30;
+  --track: #24242a;
+  --rule: #38383a;
+  --ink: #ffffff;
+  --ink-soft: #ffffffb8;
+  --label: #8e8e93;
+  --good: #3ddc97;
+  --warn: #ffb547;
+  --bad: #ff6b5e;
+  --on-good: #08150f;
+  --disc-good: #3ddc9733;
+  --shot-card-border: #ffffff30;
+  --shot-card: 0 50px 120px rgba(0, 0, 0, 0.87), 0 0 0 2px rgba(255, 255, 255, 0.19), 0 0 110px rgba(61, 220, 151, 0.27);
+  --font-marketing: "Onest Latin", "Onest Cyrillic", system-ui, sans-serif;
+
+  --background: var(--bg);
+  --foreground: var(--ink);
+  --card: var(--row);
+  --card-foreground: var(--ink);
+  --popover: var(--row);
+  --popover-foreground: var(--ink);
+  --primary: var(--good);
+  --primary-foreground: var(--on-good);
+  --secondary: var(--chip);
+  --secondary-foreground: var(--ink);
+  --muted: var(--chip);
+  --muted-foreground: var(--label);
+  --accent: var(--chip);
+  --accent-foreground: var(--ink);
+  --destructive: var(--bad);
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--good);
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --font-sans: var(--font-marketing);
+  --font-heading: var(--font-marketing);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-canvas: var(--canvas);
+  --color-edge: var(--edge);
+  --color-rule: var(--rule);
+  --color-ink-soft: var(--ink-soft);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground text-[17px] leading-[1.55];
+    -webkit-text-size-adjust: 100%;
+  }
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--good);
+    outline-offset: 3px;
+  }
+}
+
+.phone {
+  container-type: inline-size;
+  position: relative;
+}
+
+.phone-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  transform: scale(0.7);
+  transform: scale(tan(atan2(100cqw, 410px)));
+}
+
+.ring-backdrop {
+  width: 112vmin;
+  height: 112vmin;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  opacity: 0.7;
+}
+
+.screen-fade {
+  transition: opacity 300ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-fade {
+    transition: none;
+  }
+}
+
+.phone-stage {
+  --phone-w: min(300px, 72vw);
+  position: sticky;
+  top: 4.5rem;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1023.98px) {
+  html[data-snap] {
+    scroll-snap-type: y mandatory;
+  }
+
+  html[data-snap] #devices {
+    scroll-snap-align: start;
+  }
+
+  [data-tilt-desktop] {
+    transform: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .phone-stage {
+    --phone-w: min(300px, 38vh);
+    top: calc(50vh - var(--phone-w) * 864 / 820);
+    z-index: 10;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+}
