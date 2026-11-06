@@ -10,6 +10,32 @@ export type RuntimeRow = { load: string; full: string; half: string }
 
 export type Faq = { q: string; a: string }
 
+export type ScreenTotal = { label: string; value: string; unit?: string }
+
+export type ScreenCopy = {
+  description: string
+  statusTime: string
+  percent: number
+  emptyIn: string
+  hours: number
+  minutes: number
+  hoursUnit: string
+  minutesUnit: string
+  power: string
+  updated: string
+  verdictLabel: string
+  verdict: string
+  schedule: string
+  change: string
+  today: string
+  week: string
+  range: string
+  axisStart: string
+  axisMiddle: string
+  axisNow: string
+  totals: ScreenTotal[]
+}
+
 export type HeadCopy = {
   title: string
   description: string
@@ -36,10 +62,10 @@ export type Copy = {
     titleAfter: string
     lead: string
     badgeAlt: string
-    shotAlt: string
-    shotSrc: string
     badgeSrc: string
   }
+  screen: ScreenCopy
+  og: { line1: string; line2: string }
   devices: {
     title: string
     supportedNote: string

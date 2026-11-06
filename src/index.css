@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "@fontsource-variable/nunito/wght.css";
 
 @font-face {
   font-family: "Onest Cyrillic";
@@ -112,4 +113,18 @@
     outline: 2px solid var(--good);
     outline-offset: 3px;
   }
+}
+
+.phone {
+  container-type: inline-size;
+  position: relative;
+}
+
+.phone-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  transform: scale(0.7);
+  transform: scale(tan(atan2(100cqw, 410px)));
 }

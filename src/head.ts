@@ -53,7 +53,7 @@ export function renderHead(copy: Copy): string {
     inLanguage: lang,
     operatingSystem: head.appOperatingSystem,
     applicationCategory: "UtilitiesApplication",
-    screenshot: `${ORIGIN}${copy.hero.shotSrc}`,
+    image: `${ORIGIN}${ogImagePath(lang)}`,
     installUrl: head.appStoreUrl,
     sameAs: [head.appStoreUrl],
     author: { "@type": "Person", name: "Mykyta Lapin" },
