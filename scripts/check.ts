@@ -11,12 +11,8 @@ const root = path.resolve(import.meta.dirname, "..")
 const dist = path.join(root, "dist")
 
 const PENDING_ASSETS: readonly string[] = [
-  "/img/app-store-badge-uk.svg",
-  "/img/app-store-badge-en.svg",
   "/og-uk.png",
   "/og-en.png",
-  "/img/ring-empty@1x.webp",
-  "/img/ring-empty@2x.webp",
 ]
 
 const LANGS: readonly Lang[] = ["uk", "en"]
