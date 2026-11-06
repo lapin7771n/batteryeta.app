@@ -149,7 +149,7 @@
 }
 
 .phone-stage {
-  --phone-w: min(320px, 80vw);
+  --phone-w: min(300px, 72vw);
   position: sticky;
   top: 4.5rem;
   z-index: 0;

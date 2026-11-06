@@ -81,7 +81,7 @@ function zoomTransform(
   const left = frame.left
   const top = parseFloat(getComputedStyle(pinned).top)
   const focus = cardFocus(step, top)
-  const fit = Math.min(zoom.scale, (window.innerWidth - 2 * MOBILE_SIDE_INSET) / width)
+  const fit = Math.min(zoom.scale, (pinned.clientWidth - 2 * MOBILE_SIDE_INSET) / width)
   const scale = focus ? Math.min(fit, focus.maxHeight / partHeight) : fit
   const focusY = focus ? focus.y : window.innerHeight * MOBILE_FOCUS_Y
   const dx = window.innerWidth / 2 - (left + width / 2) - scale * (x - 0.5) * width
