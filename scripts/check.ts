@@ -3,6 +3,7 @@ import path from "node:path"
 import { COPY } from "../src/content"
 import { SOON_DEVICES, SUPPORTED_DEVICE } from "../src/content/devices"
 import { REGIONS } from "../src/content/regions"
+import { SCREEN_IDS } from "../src/content/screen-ids"
 import type { Lang } from "../src/content/types"
 import { ORIGIN, PAGE_PATH } from "../src/head"
 import { CT_MAX_LENGTH } from "../src/relabel"
@@ -152,6 +153,38 @@ function sectionHtml(html: string, id: string): string | null {
   return match ? match[0] : null
 }
 
+function stepHtml(html: string, step: number): string | null {
+  const match = html.match(
+    new RegExp(`<article[^>]*data-step="${step}"[\\s\\S]*?</article>`)
+  )
+  return match ? match[0] : null
+}
+
+const PROVIDER_NAMES = /yasno|ясно|dtek|дтек|oblenergo|обленерго/i
+
+function checkScreens(lang: Lang, html: string): void {
+  const layers = tags(html, "div").filter((div) => div.has("data-screen"))
+  const found = layers.map((layer) => layer.get("data-screen") ?? "")
+  if (found.join() !== SCREEN_IDS.join()) {
+    fail(lang, `phone screens [${found.join(", ")}], expected [${SCREEN_IDS.join(", ")}]`)
+    return
+  }
+  layers.forEach((layer, index) => {
+    const hidden = layer.get("aria-hidden") === "true"
+    if (index === 0 && hidden) fail(lang, "first phone screen is aria-hidden in prerendered HTML")
+    if (index > 0 && !hidden) {
+      fail(lang, `phone screen "${layer.get("data-screen")}" is not aria-hidden in prerendered HTML`)
+    }
+  })
+  if (!html.includes(normalizeLabel(COPY[lang].screens.descriptions.home))) {
+    fail(lang, "phone label is not the first screen's description")
+  }
+}
+
+function normalizeLabel(text: string): string {
+  return text.replaceAll('"', "&quot;")
+}
+
 function checkContent(lang: Lang, html: string): void {
   const copy = COPY[lang]
   const text = visibleText(html)
@@ -178,7 +211,31 @@ function checkContent(lang: Lang, html: string): void {
   if (!h1 || visibleText(h1[0]).length === 0) {
     fail(lang, "<h1> missing from prerendered HTML")
   }
-  needInSection("useful", "region", REGIONS.map((region) => region[lang]))
+  if (sectionHtml(html, "features") === null) {
+    fail(lang, '<section id="features"> missing from prerendered HTML')
+  }
+  const heroStep = html.match(/<div[^>]*data-step="0"[\s\S]*?<\/h1>/)
+  if (!heroStep) fail(lang, "hero step data-step=\"0\" with the <h1> missing")
+  copy.features.steps.forEach((step, index) => {
+    const article = stepHtml(html, index + 1)
+    if (article === null) {
+      fail(lang, `<article data-step="${index + 1}"> missing from prerendered HTML`)
+      return
+    }
+    const articleText = visibleText(article)
+    const where = `step ${index + 1}`
+    needIn(where, articleText, `${where} title`, step.title)
+    needIn(where, articleText, `${where} body`, step.body)
+    if (step.regionsLead) {
+      needIn(where, articleText, `${where} regions lead`, step.regionsLead)
+      for (const region of REGIONS) {
+        needIn(where, articleText, "region", region[lang])
+      }
+    }
+  })
+  const provider = PROVIDER_NAMES.exec(html)
+  if (provider) fail(lang, `provider name "${provider[0]}" in prerendered HTML`)
+  checkScreens(lang, html)
   needInSection("devices", "device", [SUPPORTED_DEVICE, ...SOON_DEVICES])
   copy.faq.items.forEach((item, index) => {
     need(`FAQ question ${index + 1}`, item.q)
