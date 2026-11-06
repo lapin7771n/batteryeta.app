@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { RingDock, RingDockAnchor } from "@/components/RingDock"
 import type { Copy } from "@/content/types"
 import { Closing } from "@/sections/Closing"
@@ -10,9 +11,11 @@ import { Limits } from "@/sections/Limits"
 import { Runtime } from "@/sections/Runtime"
 import { Setup } from "@/sections/Setup"
 import { UsefulFeatures } from "@/sections/UsefulFeatures"
+import { relabelStoreLinks } from "@/relabel"
 
 export function App({ copy }: { copy: Copy }) {
   const { otherLang } = copy
+  useEffect(() => relabelStoreLinks(location.search, document), [])
   return (
     <>
       <div className="mx-auto max-w-[980px] px-5 lg:max-w-[1180px]">
