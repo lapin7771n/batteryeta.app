@@ -19,18 +19,24 @@ function hide(image: HTMLImageElement): void {
 
 export function RingStill() {
   return (
-    <img
-      ref={(image) => {
-        if (image?.complete && image.naturalWidth === 0) hide(image)
-      }}
-      onError={(event) => hide(event.currentTarget)}
-      className="absolute inset-0 size-full object-contain"
-      src="/img/ring-empty@1x.webp"
-      srcSet="/img/ring-empty@1x.webp 1x, /img/ring-empty@2x.webp 2x"
-      alt=""
-      width={640}
-      height={640}
-      decoding="async"
-    />
+    <picture>
+      <source
+        type="image/avif"
+        srcSet="/img/ring-empty@1x.avif 1x, /img/ring-empty@2x.avif 2x"
+      />
+      <img
+        ref={(image) => {
+          if (image?.complete && image.naturalWidth === 0) hide(image)
+        }}
+        onError={(event) => hide(event.currentTarget)}
+        className="absolute inset-0 size-full object-contain"
+        src="/img/ring-empty@1x.webp"
+        srcSet="/img/ring-empty@1x.webp 1x, /img/ring-empty@2x.webp 2x"
+        alt=""
+        width={640}
+        height={640}
+        decoding="async"
+      />
+    </picture>
   )
 }
