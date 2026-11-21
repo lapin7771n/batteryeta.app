@@ -104,6 +104,14 @@ export type HeadCopy = {
   appStoreUrl: string
 }
 
+export type PairCopy = {
+  head: { title: string; description: string }
+  title: string
+  lead: string
+  steps: string[]
+  store: { question: string; soon: string }
+}
+
 export type Copy = {
   lang: Lang
   head: HeadCopy
@@ -145,6 +153,7 @@ export type Copy = {
     title: string
     items: string[]
   }
+  pair: PairCopy
   footer: {
     support: Link
     privacy: Link

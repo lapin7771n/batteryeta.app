@@ -5,6 +5,7 @@ export const APP_ID = "6822926943"
 export const THEME_COLOR = "#000000"
 
 export const PAGE_PATH: Record<Lang, string> = { uk: "/", en: "/en/" }
+export const PAIR_PATH: Record<Lang, string> = { uk: "/p/", en: "/en/p/" }
 export const DEFAULT_LANG: Lang = "en"
 
 const FONT_PRELOAD: Record<Lang, string> = {
@@ -37,6 +38,18 @@ export function pageUrl(lang: Lang): string {
 
 export function ogImagePath(lang: Lang): string {
   return `/og-${lang}.png`
+}
+
+export function renderPairHead(copy: Copy): string {
+  const { lang, pair } = copy
+  return [
+    `<title>${escapeHtml(pair.head.title)}</title>`,
+    meta("name", "description", pair.head.description),
+    meta("name", "robots", "noindex"),
+    `<link rel="canonical" href="${ORIGIN}${PAIR_PATH[lang]}">`,
+    meta("name", "theme-color", THEME_COLOR),
+    `<link rel="preload" href="${FONT_PRELOAD[lang]}" as="font" type="font/woff2" crossorigin>`,
+  ].join("\n    ")
 }
 
 export function renderHead(copy: Copy): string {

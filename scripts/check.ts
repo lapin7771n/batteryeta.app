@@ -5,7 +5,7 @@ import { SOON_DEVICES, SUPPORTED_DEVICE } from "../src/content/devices"
 import { REGIONS } from "../src/content/regions"
 import { SCREEN_IDS } from "../src/content/screen-ids"
 import type { Lang } from "../src/content/types"
-import { ORIGIN, PAGE_PATH } from "../src/head"
+import { ORIGIN, PAGE_PATH, PAIR_PATH } from "../src/head"
 import { CT_MAX_LENGTH } from "../src/relabel"
 
 const root = path.resolve(import.meta.dirname, "..")
@@ -160,6 +160,10 @@ function stepHtml(html: string, step: number): string | null {
   return match ? match[0] : null
 }
 
+function pairFile(lang: Lang): string {
+  return path.join(dist, PAIR_PATH[lang], "index.html")
+}
+
 const PROVIDER_NAMES = /yasno|ясно|dtek|дтек|oblenergo|обленерго/i
 
 function checkScreens(lang: Lang, html: string): void {
@@ -273,14 +277,105 @@ function checkHead(lang: Lang, html: string): void {
   }
 }
 
-const pages = new Map<Lang, string>()
-for (const lang of LANGS) {
-  const file = pageFile(lang)
-  if (!existsSync(file)) {
-    fail(lang, `${path.relative(root, file)} not found, run npm run build first`)
-    continue
+function checkPair(lang: Lang, html: string): void {
+  const copy = COPY[lang]
+  const { pair } = copy
+  const label = (text: string) => `pair page ${text}`
+  const robots = tags(html, "meta").filter((meta) => meta.get("name") === "robots")
+  if (robots.length !== 1 || robots[0].get("content") !== "noindex") {
+    fail(lang, label('lacks <meta name="robots" content="noindex">'))
   }
-  pages.set(lang, readFileSync(file, "utf8"))
+  const url = `${ORIGIN}${PAIR_PATH[lang]}`
+  const canonical = tags(html, "link")
+    .filter((link) => link.get("rel") === "canonical")
+    .map((link) => link.get("href") ?? "")
+  if (canonical.length !== 1 || canonical[0] !== url) {
+    fail(lang, label(`canonical [${canonical.join(", ")}], expected ${url}`))
+  }
+  const htmlLang = html.match(/<html\s[^>]*>/)
+  const declared = htmlLang ? attributes(htmlLang[0].slice(5, -1)).get("lang") : undefined
+  if (declared !== lang) fail(lang, label(`<html lang="${declared ?? ""}">, expected "${lang}"`))
+
+  const h1 = html.match(/<h1[\s>][\s\S]*?<\/h1>/)
+  if (!h1 || visibleText(h1[0]) !== normalize(pair.title)) {
+    fail(lang, label("<h1> is not the pair title"))
+  }
+  const text = visibleText(html)
+  for (const expected of [pair.lead, pair.store.question, pair.store.soon]) {
+    if (!text.includes(normalize(expected))) {
+      fail(lang, label(`misses "${expected.slice(0, 60)}"`))
+    }
+  }
+  const items = Array.from(html.matchAll(/<li>([\s\S]*?)<\/li>/g)).map((match) =>
+    visibleText(match[1])
+  )
+  if (items.join("|") !== pair.steps.map(normalize).join("|")) {
+    fail(lang, label(`steps [${items.join(" | ")}]`))
+  }
+  const links = tags(html, "a").filter((link) => link.has("data-ct"))
+  const cts = links.map((link) => new URL(link.get("href") ?? "").searchParams.get("ct"))
+  if (cts.join() !== `web_${lang}_pair`) {
+    fail(lang, label(`store link ct [${cts.join(", ")}], expected web_${lang}_pair`))
+  }
+  checkStoreLinks(lang, html)
+  const scripts = tags(html, "script")
+  for (const script of scripts) {
+    const src = script.get("src") ?? ""
+    if (!src.startsWith("/assets/")) fail(lang, label(`loads script "${src}" outside /assets/`))
+  }
+  if (/<script(?![^>]*\bsrc=)/.test(html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, ""))) {
+    fail(lang, label("has an inline script"))
+  }
+  const external = referencedAssets(html)
+  for (const asset of external) {
+    if (/\.js$/.test(asset) && !asset.startsWith("/assets/")) {
+      fail(lang, label(`references script ${asset}`))
+    }
+  }
+  if (html.includes("ring-")) fail(lang, label("references the ring bundle"))
+  const provider = PROVIDER_NAMES.exec(html)
+  if (provider) fail(lang, label(`has provider name "${provider[0]}"`))
+}
+
+const MODULEPRELOAD_POLYFILL =
+  /\(function\(\)\{let e=document\.createElement\(`link`\)\.relList;[\s\S]*?fetch\(e\.href,n\)\}\}\)\(\);/
+
+function checkPairScripts(html: string, lang: Lang): void {
+  for (const script of tags(html, "script")) {
+    const src = script.get("src")
+    if (!src) continue
+    const file = path.join(dist, src)
+    if (!existsSync(file)) continue
+    const code = readFileSync(file, "utf8").replace(MODULEPRELOAD_POLYFILL, "")
+    if (/location|hash|fetch|XMLHttpRequest|sendBeacon|WebSocket|import\(/.test(code)) {
+      fail(lang, `pair page script ${src} touches location, the network or lazy chunks`)
+    }
+  }
+}
+
+function checkSitemap(): void {
+  const sitemap = readFileSync(path.join(root, "public/sitemap.xml"), "utf8")
+  for (const lang of LANGS) {
+    if (sitemap.includes(`${ORIGIN}${PAIR_PATH[lang]}`)) {
+      fail(lang, `public/sitemap.xml lists ${PAIR_PATH[lang]}`)
+    }
+  }
+}
+
+const pages = new Map<Lang, string>()
+const pairPages = new Map<Lang, string>()
+for (const [target, fileOf] of [
+  [pages, pageFile],
+  [pairPages, pairFile],
+] as const) {
+  for (const lang of LANGS) {
+    const file = fileOf(lang)
+    if (!existsSync(file)) {
+      fail(lang, `${path.relative(root, file)} not found, run npm run build first`)
+      continue
+    }
+    target.set(lang, readFileSync(file, "utf8"))
+  }
 }
 
 for (const [lang, html] of pages) {
@@ -290,8 +385,14 @@ for (const [lang, html] of pages) {
   checkContent(lang, html)
 }
 
+for (const [lang, html] of pairPages) {
+  checkPair(lang, html)
+  checkPairScripts(html, lang)
+}
+checkSitemap()
+
 const referenced = new Set<string>(cssAssets())
-for (const html of pages.values()) {
+for (const html of [...pages.values(), ...pairPages.values()]) {
   for (const asset of referencedAssets(html)) referenced.add(asset)
 }
 const pending: string[] = []

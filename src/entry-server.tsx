@@ -3,7 +3,8 @@ import { renderToString } from "react-dom/server"
 import { App } from "./App"
 import { COPY } from "./content"
 import type { Lang } from "./content/types"
-import { renderHead } from "./head"
+import { PairApp } from "./PairApp"
+import { renderHead, renderPairHead } from "./head"
 
 export function render(lang: Lang): { app: string; head: string } {
   const copy = COPY[lang]
@@ -14,5 +15,13 @@ export function render(lang: Lang): { app: string; head: string } {
       </StrictMode>
     ),
     head: renderHead(copy),
+  }
+}
+
+export function renderPair(lang: Lang): { app: string; head: string } {
+  const copy = COPY[lang]
+  return {
+    app: renderToString(<PairApp copy={copy} />),
+    head: renderPairHead(copy),
   }
 }

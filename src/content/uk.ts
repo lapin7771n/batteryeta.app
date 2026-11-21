@@ -238,6 +238,24 @@ export const uk: Copy = {
       "Вже в App Store. Скоро в Google Play.",
     ],
   },
+  pair: {
+    head: {
+      title: "Додати пристрій у Battery ETA",
+      description:
+        "Цей QR-код додає пристрій до спільної історії Battery ETA. Відскануйте його в застосунку на телефоні, де батарея вже працює.",
+    },
+    title: "Цей QR-код додає пристрій до спільної історії",
+    lead: "Відскануйте його в Battery ETA на телефоні, де батарея вже працює.",
+    steps: [
+      "Відкрийте Battery ETA",
+      "Налаштування › Спільна історія › Додати пристрій",
+      "Наведіть камеру на QR-код",
+    ],
+    store: {
+      question: "Ще немає застосунку на цьому телефоні?",
+      soon: "Google Play · скоро",
+    },
+  },
   footer: {
     support: { label: "Підтримка", href: SUPPORT },
     privacy: { label: "Конфіденційність", href: PRIVACY },

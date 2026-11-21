@@ -13,6 +13,8 @@ export default defineConfig({
       input: {
         uk: path.resolve(import.meta.dirname, 'index.html'),
         en: path.resolve(import.meta.dirname, 'en/index.html'),
+        pairUk: path.resolve(import.meta.dirname, 'p/index.html'),
+        pairEn: path.resolve(import.meta.dirname, 'en/p/index.html'),
       },
     },
   },
