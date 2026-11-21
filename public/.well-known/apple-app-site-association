@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["WSCTL2V8W5.com.mlapin.marstek.battery"],
+        "components": [{ "/": "/p", "comment": "Pairing link from the new device's QR code" }]
+      }
+    ]
+  }
+}
