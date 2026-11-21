@@ -242,6 +242,24 @@ export const en: Copy = {
       "On the App Store now. Coming soon to Google Play.",
     ],
   },
+  pair: {
+    head: {
+      title: "Add a device to Battery ETA",
+      description:
+        "This QR code adds a device to the Battery ETA shared history. Scan it in the app on the phone where the battery already works.",
+    },
+    title: "This QR code adds a device to the shared history",
+    lead: "Scan it in Battery ETA on the phone where the battery already works.",
+    steps: [
+      "Open Battery ETA",
+      "Settings › Shared history › Add device",
+      "Point the camera at the QR code",
+    ],
+    store: {
+      question: "No app on this phone yet?",
+      soon: "Google Play · coming soon",
+    },
+  },
   footer: {
     support: { label: "Support", href: SUPPORT },
     privacy: { label: "Privacy", href: PRIVACY },
