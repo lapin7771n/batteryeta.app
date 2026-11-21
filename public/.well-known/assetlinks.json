@@ -1,0 +1,15 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.mlapin.marstek.battery",
+      "sha256_cert_fingerprints": [
+        "AB:DA:5A:27:24:3B:8A:1C:FF:68:68:6A:CB:D2:CD:C7:1E:EB:E2:C8:C4:1B:23:AF:8F:E4:F1:55:D3:03:54:0A",
+        "B4:F4:9D:E8:8F:F7:12:6B:49:0F:9F:BC:43:44:59:EF:7C:BC:AD:7C:D5:7E:7E:1F:04:91:AC:2C:3E:BC:6C:0F",
+        "1A:EF:E7:6C:92:8D:52:A0:03:C9:54:E0:84:A9:BE:9F:B0:EF:66:F3:0E:11:57:9C:E3:1A:82:04:A4:13:5A:E8",
+        "A1:1B:10:36:74:C8:35:DD:13:E9:6F:9B:F2:97:20:31:87:4E:C8:A4:0A:F9:55:17:37:B4:66:AF:03:16:3D:CC"
+      ]
+    }
+  }
+]
